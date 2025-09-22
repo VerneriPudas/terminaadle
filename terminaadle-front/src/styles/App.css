@@ -1,0 +1,80 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --page-width: calc(9 * 45px);
+  --page-height: calc(12 * 45px);
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+#app h1 {
+  width: 100%;
+}
+
+#img-container {
+  width: calc(9 * 45px);
+  height: calc(12 *  45px);
+}
+
+#terminaali-page {
+  background-color: black;
+  width: 100%;
+  height: 100%;
+}
+
+#form-container {
+  width: 100%;
+}
+
+.input-wrapper {
+  /*width: var(--page-width); */
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin: 20px auto 10px auto;
+}
+
+.space-span   {
+  display: inline-flex;
+  width: 20px;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.input-wrapper div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.guess-input {
+  padding: 1em;
+  flex: 1 1 10px;
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  padding: 1em;
+  font-size: 1em;
+  width: 100%;
+}
+
+.submit-button-container {
+  width: 100%;
+}
