@@ -5,6 +5,29 @@
 :root {
   --page-width: calc(9 * 45px);
   --page-height: calc(12 * 45px);
+
+  --page-background-color: #1f1f1f;
+  --border-color: #ffbb00;
+  --input-background-color: #303030;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*background-color: var(--page-background-color);*/ 
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+
+  /*
+  background: linear-gradient(
+    var(--page-background-color), 
+    var(--border-color));
+  */
+  background: radial-gradient(circle,rgba(255, 187, 0, 1) 0%, rgba(140, 107, 16, 1) 0%, rgba(31, 31, 31, 1) 100%);
 }
 
 #root {
@@ -23,6 +46,7 @@
 
 #app h1 {
   width: 100%;
+  text-shadow: var(--border-color) 1px 1px 20px;
 }
 
 #img-container {
@@ -31,9 +55,11 @@
 }
 
 #terminaali-page {
-  background-color: black;
+  background-color: white;
   width: 100%;
   height: 100%;
+
+  /*box-shadow: 1px 1px 2000px 5px var(--border-color); */
 }
 
 #form-container {
@@ -67,13 +93,56 @@
   padding: 1em;
   flex: 1 1 10px;
   margin-bottom: 10px;
+
+  background-color: var(--input-background-color);
+  box-shadow: 1px 1px 6px 2px black;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  color: white;
+  text-align: center;
+  transition: box-shadow 0.4s;
 }
+
+.guess-input:focus {
+  box-shadow: 1px 1px 6px 2px var(--border-color);
+}
+
+/* Hide the spin buttons in WebKit browsers */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide spin buttons in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 
 .submit-button {
   padding: 1em;
   font-size: 1em;
   width: 100%;
+
+  background-color: var(--input-background-color);
+  border: none;
+  color: white;
+  box-shadow: 1px 1px 6px 2px black;
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition: box-shadow 0.4s;
 }
+
+.submit-button:focus,
+.submit-button:hover {
+  box-shadow: 1px 1px 6px 2px var(--border-color);
+  outline: none;
+}
+
 
 .submit-button-container {
   width: 100%;
