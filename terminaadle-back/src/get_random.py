@@ -5,8 +5,8 @@ from pypdf import PdfReader
 from pdf2image import convert_from_path
 
 if __name__ == "__main__":
-    pdf_dir = "pdf_downloads"
-    json_file = "dataset.json"
+    pdf_dir = "..//..//data//pdf_downloads"
+    json_file = "..//..//data//dataset.json"
 
     with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         path_to_pdf, first_page=random_page_num + 1, last_page=random_page_num + 1
     )
     output_file = (
-        f"{random_item['year']}{random_item['edition']}_page{random_page_num + 1}.jpg"
+        f"random_page.jpg"
     )
     images[0].save(output_file, "JPEG")
     print("Saved: ", output_file)
