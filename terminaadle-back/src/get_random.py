@@ -4,7 +4,7 @@ import os
 from pypdf import PdfReader
 from pdf2image import convert_from_path
 
-if __name__ == "__main__":
+def get():
     pdf_dir = "..//..//data//pdf_downloads"
     json_file = "..//..//data//dataset.json"
     image_path = "random.jpg"
@@ -42,3 +42,7 @@ if __name__ == "__main__":
     )
     images[0].save(output_file, "JPEG")
     print("Saved: ", output_file)
+
+if __name__ == "__main__":
+    get()
+    
