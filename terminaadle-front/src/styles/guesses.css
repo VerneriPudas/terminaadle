@@ -1,0 +1,28 @@
+#guesses {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    position: relative;
+    height: var(--page-height);
+    width: 300px;
+    /*background-color: var(--input-background-color);*/
+
+    bottom: var(--page-height);
+    left: calc(var(--page-width) + 20px);
+    text-align: left;
+}
+
+
+.guesses-content {
+    flex-grow: 1;
+}
+
+.guesses-content h3 {
+    margin: 0px auto auto 10px;
+}
+
+#guesses footer {
+    margin: 0px auto auto 10px;
+    width: 100%;
+}
