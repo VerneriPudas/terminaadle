@@ -13,9 +13,12 @@
     text-align: left;
 }
 
-
 .guesses-content {
     flex-grow: 1;
+}
+
+.guesses-content div {
+    margin-left: 10px;
 }
 
 .guesses-content h3 {
