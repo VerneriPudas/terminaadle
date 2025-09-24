@@ -2,10 +2,18 @@ import { useState } from "react";
 import "./styles/App.css";
 import "./styles/guesses.css";
 
+import testImg from "./assets/test_img.jpg";
+
 interface GuessProps {
-  issue: number | null;
-  releaseYear: number | null;
+  issue: number;
+  releaseYear: number;
   hint?: string[];
+}
+
+interface Answer {
+  issue: number;
+  releaseYear: number;
+  imgData: unknown;
 }
 
 function Hint({ hint }: { hint?: string }) {
@@ -27,12 +35,39 @@ function Guess({ issue, releaseYear, hints }: GuessProps) {
 }
 
 function App() {
+  const testResponseData = {
+    issue: 2,
+    releaseYear: 1995,
+    img: testImg,
+  };
+
   const [guesses, setGuesses] = useState<GuessProps[]>([]);
+  type Hint = { issue: string; releaseYear: string };
+
+  function checkAnswer(guess: GuessProps, answer: Answer): Hint {
+    const hint: Hint = {
+      issue: "",
+      releaseYear: "",
+    };
+
+    hint.issue =
+      guess.issue > answer.issue
+        ? "isompi"
+        : guess.issue < answer.issue
+        ? "pienempi"
+        : "";
+
+    hint.releaseYear =
+      guess.releaseYear > answer.releaseYear
+        ? "isompi"
+        : guess.releaseYear < answer.releaseYear
+        ? "pienempi"
+        : "";
+
+    return hint;
+  }
 
   function onFormSubmit(formData: FormData): void {
-    console.log("Submited", formData);
-    console.log(guesses);
-
     const guessObject: GuessProps = {
       issue: formData.get("issue") as unknown as number,
       releaseYear: formData.get("release_year") as unknown as number,
@@ -44,7 +79,7 @@ function App() {
     <div id="app">
       <h1>Terminaadle</h1>
       <div id="img-container">
-        <div id="terminaali-page"></div>
+        <img id="terminaali-page" src={testResponseData.img} />
         <div id="guesses">
           <div className="guesses-content">
             <h3>Arvaukset</h3>
