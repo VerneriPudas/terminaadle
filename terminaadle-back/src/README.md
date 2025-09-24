@@ -8,26 +8,26 @@ Minimal FastAPI backend for a web game. Serves a dynamically generated image and
 * `fastapi`, `uvicorn`, `pillow`
 
 ### Run server
-´´´bash
+```bash
 python backend.py
-´´´
+```
 
 ### API Endpoint
-´´´bash
+```bash
 GET /generate-image
 URL: http://localhost:8000/generate-image
-´´´
+```
 
-*Response
+* Response
 
 image_base64: "/base64imagedatablaablaablaa
 
 answer_data:
-´´´J́SON
+```J́SON
 {
     "page": 69,
     "edition": 420,
     "year": 1337,
     "image_url": "http://localhost:8000/random.jpg"
 }
-´´´
+```
