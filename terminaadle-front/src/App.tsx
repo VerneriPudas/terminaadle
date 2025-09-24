@@ -5,14 +5,23 @@ import "./styles/guesses.css";
 interface GuessProps {
   issue: number | null;
   releaseYear: number | null;
-  hint?: string;
+  hint?: string[];
 }
 
-function Guess({ issue, releaseYear, hint }: GuessProps) {
+function Hint({ hint }: { hint?: string }) {
+  return (
+    <>
+      <span>{hint}</span>
+    </>
+  );
+}
+
+function Guess({ issue, releaseYear, hints }: GuessProps) {
   return (
     <div>
-      {issue} - {releaseYear}
-      <span>{hint}</span>
+      {issue}
+      <Hint />/{releaseYear}
+      <Hint />
     </div>
   );
 }
