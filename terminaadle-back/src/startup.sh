@@ -1,5 +1,5 @@
 cd data/
-#./download_files.sh https://otit.fi/toiminta/terminaali/verkkoversiot/ &&\
+./download_files.sh https://otit.fi/toiminta/terminaali/verkkoversiot/ &&\
 python generate_dataset.py
 
 cd ..
