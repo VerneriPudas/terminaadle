@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  api-server:
+    build:
+      context: ./terminaadle-back # Location of the API Dockerfile
+    container_name: api-server
+    # The API will listen on port 8080 inside the Docker network
+    ports:
+      - "8080:8080" # Map host port 8080 to container port 8080 (for direct access/testing)
+    environment:
+      # Example: Pass a key/value to your server if needed
+      NODE_ENV: production
+      # 💡 Important: The API will be reachable by its service name 'api-server'
+      # from within the 'client-app' container.
+    restart: always
+
+  # 2. React/Vite Client Definition
+  client-app:
+    build:
+      context: ./terminaadle-front # Location of the Client Dockerfile
+      # 💡 Pass the API URL as a build argument to the Dockerfile
+    container_name: client-app
+    # The client app is served by Nginx on port 80
+    ports:
+      - "3000:80" # Map host port 3000 to container port 80
+    depends_on:
+      - api-server
+    restart: always
