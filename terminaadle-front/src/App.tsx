@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles/App.css";
 import "./styles/guesses.css";
 
 import testImg from "./assets/test_img.jpg";
 
+type Hint = { issue: string; releaseYear: string };
+type GameState = "Voitit pelin" | "Hävisit pelin" | "";
+
 interface GuessProps {
   issue: number;
   releaseYear: number;
-  hint?: string[];
+  hint?: Hint;
 }
 
 interface Answer {
@@ -16,35 +19,82 @@ interface Answer {
   imgData: unknown;
 }
 
-function Hint({ hint }: { hint?: string }) {
+function isCorrect(hint?: Hint): boolean[] {
+  return [hint?.issue ? false : true, hint?.releaseYear ? false : true];
+}
+
+function HintComponent({ hint }: { hint?: string }) {
   return (
     <>
-      <span>{hint}</span>
+      <span className={`hint ${hint ? "show" : ""}`}>
+        {hint ? `(${hint})` : ""}
+      </span>
     </>
   );
 }
 
-function Guess({ issue, releaseYear, hints }: GuessProps) {
+type SubmitProps = {
+  gameState: GameState;
+  reset: (e: React.MouseEvent<HTMLButtonElement>) => void;
+};
+function SubmitButton({ gameState, reset }: SubmitProps) {
+  const Reset = () => (
+    <button className="submit-button" onClick={(e) => reset(e)}>
+      Yritä uudelleen?
+    </button>
+  );
+
+  const Submit = () => (
+    <input type="submit" className="submit-button" value="Submit" />
+  );
+
+  return (
+    <>
+      <div className="submit-button-container">
+        {gameState ? <Reset /> : <Submit />}
+      </div>
+    </>
+  );
+}
+
+function Guess({ issue, releaseYear, hint }: GuessProps) {
   return (
     <div>
-      {issue}
-      <Hint />/{releaseYear}
-      <Hint />
+      <span
+        id="guess-issue"
+        className={isCorrect(hint)[0] ? "correct" : "incorrect"}
+      >
+        {issue}
+        <HintComponent hint={hint?.issue} />
+      </span>
+      <span id="guess-dash">-</span>
+      <span
+        id="guess-release-year"
+        className={isCorrect(hint)[1] ? "correct" : "incorrect"}
+      >
+        {releaseYear}
+        <HintComponent hint={hint?.releaseYear} />
+      </span>
     </div>
   );
 }
 
 function App() {
+  const MAX_GUESSES = 5;
+
   const testResponseData = {
     issue: 2,
     releaseYear: 1995,
-    img: testImg,
+    imgData: testImg,
   };
 
+  const [gameState, setGameState] = useState<GameState>("");
+  const [guessesLeft, setGuessesLeft] = useState(MAX_GUESSES);
   const [guesses, setGuesses] = useState<GuessProps[]>([]);
-  type Hint = { issue: string; releaseYear: string };
 
-  function checkAnswer(guess: GuessProps, answer: Answer): Hint {
+  const [inputDisabled, setInputDisabled] = useState<boolean>(false);
+
+  function checkAnswer(guess: GuessProps, answer: Answer): GuessProps {
     const hint: Hint = {
       issue: "",
       releaseYear: "",
@@ -52,34 +102,67 @@ function App() {
 
     hint.issue =
       guess.issue > answer.issue
-        ? "isompi"
-        : guess.issue < answer.issue
         ? "pienempi"
+        : guess.issue < answer.issue
+        ? "isompi"
         : "";
 
     hint.releaseYear =
       guess.releaseYear > answer.releaseYear
-        ? "isompi"
-        : guess.releaseYear < answer.releaseYear
         ? "pienempi"
+        : guess.releaseYear < answer.releaseYear
+        ? "isompi"
         : "";
 
-    return hint;
+    guess.hint = hint;
+    return guess;
   }
 
   function onFormSubmit(formData: FormData): void {
-    const guessObject: GuessProps = {
+    let guessObject: GuessProps = {
       issue: formData.get("issue") as unknown as number,
       releaseYear: formData.get("release_year") as unknown as number,
     };
+
+    const updatedGuessesLeft =
+      guessesLeft - 1 < 0 ? guessesLeft : guessesLeft - 1;
+
+    guessObject = checkAnswer(guessObject, testResponseData);
+
+    const isWin = (): boolean => {
+      // Don't ask this is stupid but at this point I don't want to nor have time
+      // to refactor this shit in smarter solution
+      const guessList = isCorrect(guessObject.hint);
+      return guessList[0] && guessList[1];
+    };
+
+    if (isWin()) {
+      setGameState("Voitit pelin");
+      setInputDisabled(true);
+    } else if (updatedGuessesLeft <= 0) {
+      setGameState("Hävisit pelin");
+      setInputDisabled(true);
+    }
+
+    setGuessesLeft(updatedGuessesLeft);
     setGuesses((prev) => [...prev, guessObject]);
+  }
+
+  function resetGame(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    console.log("Game reseted");
+
+    setGuessesLeft(MAX_GUESSES);
+    setGuesses([]);
+    setGameState("");
+    setInputDisabled(false);
   }
 
   return (
     <div id="app">
       <h1>Terminaadle</h1>
       <div id="img-container">
-        <img id="terminaali-page" src={testResponseData.img} />
+        <img id="terminaali-page" src={testResponseData.imgData} />
         <div id="guesses">
           <div className="guesses-content">
             <h3>Arvaukset</h3>
@@ -88,10 +171,25 @@ function App() {
                 key={index}
                 issue={obj.issue}
                 releaseYear={obj.releaseYear}
+                hint={obj.hint}
               />
             ))}
           </div>
-          <footer id="guesses-footer">Arvaukset jäljellä: 5</footer>
+          <footer id="guesses-footer">
+            <div
+              id="game-state-div"
+              className={
+                gameState === "Voitit pelin"
+                  ? "win"
+                  : gameState === "Hävisit pelin"
+                  ? "lose"
+                  : ""
+              }
+            >
+              {gameState}
+            </div>
+            <div>Arvaukset jäljellä: {guessesLeft}</div>
+          </footer>
         </div>
       </div>
       <div id="form-container">
@@ -104,6 +202,7 @@ function App() {
                 inputMode="numeric"
                 className="guess-input"
                 placeholder="Painos"
+                disabled={inputDisabled}
                 required
               />
               <span className="space-span">-</span>
@@ -113,11 +212,10 @@ function App() {
                 inputMode="numeric"
                 className="guess-input"
                 placeholder="Vuosi"
+                disabled={inputDisabled}
                 required
               />
-              <div className="submit-button-container">
-                <input type="submit" className="submit-button" value="Submit" />
-              </div>
+              <SubmitButton gameState={gameState} reset={(e) => resetGame(e)} />
             </div>
           </div>
         </form>

@@ -27,7 +27,13 @@ body {
     var(--page-background-color), 
     var(--border-color));
   */
-  background: radial-gradient(circle,rgba(255, 187, 0, 1) 0%, rgba(140, 107, 16, 1) 0%, rgba(31, 31, 31, 1) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 187, 0, 1) 0%, 
+    rgba(140, 107, 16, 1) 0%, 
+    rgba(31, 31, 31, 1) 100%
+  );
+  
 }
 
 #root {

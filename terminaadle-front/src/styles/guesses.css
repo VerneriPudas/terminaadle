@@ -29,3 +29,29 @@
     margin: 0px auto auto 10px;
     width: 100%;
 }
+
+#guess-dash {
+    padding: 5px;
+}
+
+.hint.show {
+    padding-left: 5px;
+    color: lightslategray;
+    font-weight: lighter;
+}
+
+#game-state-div.lose,
+#guess-release-year.incorrect,
+#guess-issue.incorrect {
+    color: lightcoral;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+#game-state-div.win,
+#guess-release-year.correct,
+#guess-issue.correct {
+    font-weight: bold;
+    color: greenyellow;
+    font-size: 1.3em;
+}
