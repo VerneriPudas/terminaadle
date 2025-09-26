@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import "./styles/App.css";
 import "./styles/guesses.css";
 
-import testImg from "./assets/test_img.jpg";
+import { fetchImage } from "./services/imageService";
+import ImageDisplay from "./components/ImageDisplay";
 
 type Hint = { issue: string; releaseYear: string };
 type GameState = "Voitit pelin" | "Hävisit pelin" | "";
@@ -40,7 +41,7 @@ type SubmitProps = {
 function SubmitButton({ gameState, reset }: SubmitProps) {
   const Reset = () => (
     <button className="submit-button" onClick={(e) => reset(e)}>
-      Yritä uudelleen?
+      Pelaa uudestaan?
     </button>
   );
 
@@ -82,12 +83,8 @@ function Guess({ issue, releaseYear, hint }: GuessProps) {
 function App() {
   const MAX_GUESSES = 5;
 
-  const testResponseData = {
-    issue: 2,
-    releaseYear: 1995,
-    imgData: testImg,
-  };
-
+  const [responseData, setResponseData] = useState<Answer>();
+  const [responseImage, setResponseImage] = useState("");
   const [gameState, setGameState] = useState<GameState>("");
   const [guessesLeft, setGuessesLeft] = useState(MAX_GUESSES);
   const [guesses, setGuesses] = useState<GuessProps[]>([]);
@@ -127,7 +124,7 @@ function App() {
     const updatedGuessesLeft =
       guessesLeft - 1 < 0 ? guessesLeft : guessesLeft - 1;
 
-    guessObject = checkAnswer(guessObject, testResponseData);
+    guessObject = checkAnswer(guessObject, responseData);
 
     const isWin = (): boolean => {
       // Don't ask this is stupid but at this point I don't want to nor have time
@@ -156,13 +153,44 @@ function App() {
     setGuesses([]);
     setGameState("");
     setInputDisabled(false);
+
+    // fetch new image data upon game reset
+    fetchImage()
+      .then((data) => {
+        handleFetchData(data);
+      })
+      .catch((err) => {
+        console.log("Failed to fetch data", err);
+      });
   }
+
+  function handleFetchData(data) {
+    const tmpData: Answer = {
+      issue: data.answer_data.edition,
+      releaseYear: data.answer_data.year,
+      imgData: data.image_base64,
+    };
+
+    console.log(tmpData);
+    setResponseData(tmpData);
+    setResponseImage(data.image_base64);
+  }
+
+  useEffect(() => {
+    fetchImage()
+      .then((data) => {
+        handleFetchData(data);
+      })
+      .catch((err) => {
+        console.log("Failed to fetch data", err);
+      });
+  }, []);
 
   return (
     <div id="app">
       <h1>Terminaadle</h1>
       <div id="img-container">
-        <img id="terminaali-page" src={testResponseData.imgData} />
+        <ImageDisplay base64Image={responseImage} />
         <div id="guesses">
           <div className="guesses-content">
             <h3>Arvaukset</h3>
